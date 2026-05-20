@@ -1,3 +1,5 @@
+import { convertImageToBase64 } from '../utils/converter.js';
+import IndexedDB from '../utils/indexedDB.js';
 class StoryView {
     constructor() {
       this.mainContent = document.getElementById('main-content');
@@ -40,10 +42,43 @@ class StoryView {
   const storyList = document.createElement('div');
   storyList.className = 'story-list';
 
+
   stories.forEach(s => {
     const storyItem = document.createElement('div');
     storyItem.className = 'story-item';
+    const loveBtn = document.createElement('button');
+  loveBtn.className = 'love-btn';
+  loveBtn.title = 'Tambahkan ke Favorit';
+  loveBtn.innerHTML = '❤️';
+  loveBtn.style.position = 'absolute';
+  loveBtn.style.top = '10px';
+  loveBtn.style.right = '10px';
+  loveBtn.style.fontSize = '24px';
+  loveBtn.style.border = 'none';
+  loveBtn.style.background = 'transparent';
+  loveBtn.style.cursor = 'pointer';
+  loveBtn.dataset.storyId = s.id;
 
+  loveBtn.addEventListener('click', async () => {
+    const imageSrc = s.imageBlob ? URL.createObjectURL(s.imageBlob) : s.photoUrl;
+    const base64Image = await convertImageToBase64(imageSrc);
+
+    const storyToSave = {
+      id: s.id,
+      name: s.name,
+      description: s.description,
+      createdAt: s.createdAt,
+      lat: s.lat,
+      lon: s.lon,
+      imageBase64: base64Image,
+    };
+
+    await IndexedDB.saveFavoriteStoryToDb(storyToSave);
+    alert('Ditambahkan ke Favorit!');
+  });
+
+  storyItem.style.position = 'relative';
+  storyItem.appendChild(loveBtn);
     const name = document.createElement('h3');
     name.textContent = s.name || 'Anonymous';
     storyItem.appendChild(name);
@@ -224,21 +259,25 @@ class StoryView {
       });
       
       return {
-        getFormData: () => ({
-          photo: capturedFile,
-          description: document.getElementById('description').value,
-          lat: self.selectedLocation?.lat,
-          lon: self.selectedLocation?.lng
-        }),
-        setSubmitHandler: handler => {
-          document.getElementById('submit-story').addEventListener('click', handler);
-        },
-        stopCamera: () => {
-          if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-          }
-      }
-    };
+  getFormData: () => ({
+    photo: capturedFile,
+    description: document.getElementById('description').value,
+    lat: self.selectedLocation?.lat,
+    lon: self.selectedLocation?.lng
+  }),
+  setSubmitHandler: handler => {
+    document.getElementById('submit-story').addEventListener('click', handler);
+  },
+  setTakePhotoHandler: handler => {
+    document.getElementById('capture-button').addEventListener('click', handler);
+  },
+  stopCamera: () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+  }
+};
+
   }
 
     showLoginForm() {

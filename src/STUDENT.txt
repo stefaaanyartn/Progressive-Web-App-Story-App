@@ -4,8 +4,8 @@ Story API: https://story-api.dicoding.dev/v1
 
 Authentication:
 - All POST requests require Authorization header with Bearer token
-- Token obtained through login endpoint
+- Token obtained through login endpoint.
 - Token stored in localStorage after login
 
-LINK DEPLOY APP : https://storyappstefany.netlify.app/ 
+LINK DEPLOY APP : https://papaya-nasturtium-bfd3c9.netlify.app/#/ 
 

@@ -2,12 +2,14 @@ import StoryModel from '../model/StoryModel.js';
 import { subscribePushNotification } from '../utils/web-push.js';
 import StoryView from '../view/StoryView.js';
 import IndexedDB from '../utils/indexedDB.js';
+import FavoriteView from '../view/Favorite.js';
 
 class StoryPresenter {
   constructor() {
     this.model = new StoryModel();
     this.view = new StoryView();
-    this.currentForm = null;  // Menyimpan referensi ke form yang sedang aktif
+     this.favoriteView = new FavoriteView();
+    this.currentForm = null; 
     this.initRouter();
   }
 
@@ -59,6 +61,9 @@ class StoryPresenter {
         case '#/register':
           this.showRegisterPage();
           break;
+        case '#/fav':
+          this.favoriteView.show();
+          break;
         default:
           if (this.model.token) this.showStoriesPage();
           else { alert('Please login first'); window.location.hash = '#/login'; }
@@ -88,13 +93,10 @@ class StoryPresenter {
 
   showAddPage() {
     const form = this.view.showAddForm();
-    this.currentForm = form;  // Menyimpan referensi form yang aktif
-
-    // Berhenti kamera ketika tombol ambil foto diklik
+    this.currentForm = form;  
     form.setTakePhotoHandler(() => {
-      form.stopCamera();
-    });
-
+  form.stopCamera();
+});
     form.setSubmitHandler(async () => {
       const data = form.getFormData();
       if (!data.photo || !data.description) return alert('Fill photo & description');

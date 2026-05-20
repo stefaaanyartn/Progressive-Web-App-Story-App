@@ -2,7 +2,7 @@
   "name": "dicoding",
   "version": "1.0.0",
   "main": "index.js",
-  "homepage": "https://stefaaanyartn.github.io/dicodingstoryappstefany",
+  "homepage": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve --config webpack.dev.js",
@@ -23,7 +23,8 @@
     "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.2",
-    "webpack-merge": "^6.0.1"
+    "webpack-merge": "^6.0.1",
+    "workbox-webpack-plugin": "^7.3.0"
   },
   "dependencies": {
     "idb": "^8.0.3"

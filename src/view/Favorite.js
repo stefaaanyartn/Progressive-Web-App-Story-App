@@ -6,9 +6,11 @@ class FavoriteView {
   }
 
   async show() {
+    
+  console.log('[FavoriteView] show() called');
     this.root.innerHTML = `
       <h2>Daftar Favorit</h2>
-      <button id="clear-all">Hapus Semua</button>
+      <button id="clear-all">Hapus Semua favorite?</button>
       <div id="favorites-list"></div>
     `;
 
@@ -71,7 +73,7 @@ class FavoriteView {
       const konfirmasi = confirm('Yakin ingin menghapus semua data favorit?');
       if (konfirmasi) {
         await IndexedDB.clearAllFavoriteStories();
-        this.show(); // refresh view
+        this.show(); 
       }
     });
   }

@@ -1,18 +1,54 @@
 import { openDB } from 'idb';
 
 const DB_NAME = 'story-app-db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_NAME = 'stories';
+const FAVORITE_STORE = 'favorites';
 
 const dbPromise = openDB(DB_NAME, DB_VERSION, {
     upgrade(db) {
         if (!db.objectStoreNames.contains(STORE_NAME)) {
         db.createObjectStore(STORE_NAME, { keyPath: 'id' });
         }
+        if (!db.objectStoreNames.contains(FAVORITE_STORE)) {
+      db.createObjectStore(FAVORITE_STORE, { keyPath: 'id' });
+    }
     },
 });
 
 const IndexedDB = {
+  saveFavoriteStoryToDb: async function (story) {
+    const db = await dbPromise;
+    const tx = db.transaction(FAVORITE_STORE, 'readwrite');
+    const store = tx.objectStore(FAVORITE_STORE);
+    await store.put(story);
+    await tx.done;
+  },
+
+ async getFavoriteStoriesFromDb() {
+    const db = await dbPromise;
+    return db.getAll('favorites');
+  },
+  async removeFavoriteStoryFromDb(id) {
+    const db = await dbPromise;
+    const tx = db.transaction('favorites', 'readwrite');
+    await tx.objectStore('favorites').delete(id);
+    await tx.done;
+  },
+
+  async clearAllFavoriteStories() {
+    const db = await dbPromise;
+    const tx = db.transaction('favorites', 'readwrite');
+    await tx.objectStore('favorites').clear();
+    await tx.done;
+  },
+
+
+
+
+
+
+
 async putStories(stories) {
             const storiesWithBlob = [];
     for (const story of stories) {
