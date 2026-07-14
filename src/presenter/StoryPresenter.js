@@ -90,11 +90,6 @@ class StoryPresenter {
     const form = this.view.showAddForm();
     this.currentForm = form;  // Menyimpan referensi form yang aktif
 
-    // Berhenti kamera ketika tombol ambil foto diklik
-    form.setTakePhotoHandler(() => {
-      form.stopCamera();
-    });
-
     form.setSubmitHandler(async () => {
       const data = form.getFormData();
       if (!data.photo || !data.description) return alert('Fill photo & description');
